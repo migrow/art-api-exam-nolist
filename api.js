@@ -3,12 +3,18 @@ const express = require('express')
 const app = express()
 const HTTPError = require('node-http-error')
 const bodyParser = require('body-parser')
-const reqFieldChecker = require('./lib/check-req-fields')
-const postCleaner = require('./lib/clean-post-body')
-const { createPainting } = require('./dal.js')
+const {
+  createPainting,
+  getPainting,
+  deletePainting,
+  updatePainting
+} = require('./dal')
+
 const { propOr, join, not, isEmpty } = require('ramda')
-app.use(bodyParser.json())
+
 const port = propOr(4000, 'PORT', process.env.PORT)
+
+app.use(bodyParser.json())
 
 app.get('/', function(req, res, next) {
   res.send(
@@ -16,9 +22,31 @@ app.get('/', function(req, res, next) {
   )
 })
 
-app.post('/paintings', (req, res, next) => {
+app.post('/paintings', function(req, res, next) {
   createPainting(req.body)
-    .then(createdPainting => res.status(201).send(createdPainting))
+    .then(painting => res.send(painting))
+    .catch(err => next(new HTTPError(err.status, err.message, err)))
+})
+
+app.get('/paintings/:id', function(req, res, next) {
+  getPainting(req.params.id)
+    .then(painting => res.send(painting))
+    .catch(err => next(new HTTPError(err.status, err.message, err)))
+})
+
+app.delete('/paintings/:id', function(req, res, next) {
+  deletePainting(req.params.id, function(err, deletedResult) {
+    if (err) {
+      next(new HTTPError(err.status, err.message, err))
+      return
+    }
+    res.send(deletedResult)
+  })
+})
+
+app.put('/paintings/:id', function(req, res, next) {
+  updatePainting(req.body)
+    .then(painting => res.send(painting))
     .catch(err => next(new HTTPError(err.status, err.message, err)))
 })
 
