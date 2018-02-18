@@ -10,7 +10,31 @@ const createPainting = doc => {
   return db.put(doc)
 }
 
+const createArtist = doc => {
+  doc._id = `artist_${slugster(doc.name, { lower: true })}`
+  doc.type = 'artist'
+  return db.put(doc)
+}
+
 const getPainting = id => db.get(id)
+
+const getArtist = id => db.get(id)
+
+const deleteArtist = function(id, cb) {
+  db.get(id, function(err, doc) {
+    if (err) {
+      cb(err)
+      return
+    }
+    db.remove(doc, function(err, deletedResult) {
+      if (err) {
+        cb(err)
+        return
+      }
+      cb(null, deletedResult)
+    })
+  })
+}
 
 const deletePainting = function(id, cb) {
   db.get(id, function(err, doc) {
@@ -29,5 +53,15 @@ const deletePainting = function(id, cb) {
 }
 
 const updatePainting = doc => db.put(doc)
+const updateArtist = doc => db.put(doc)
 
-module.exports = { createPainting, getPainting, deletePainting, updatePainting }
+module.exports = {
+  createPainting,
+  getPainting,
+  deletePainting,
+  updatePainting,
+  createArtist,
+  getArtist,
+  deleteArtist,
+  updateArtist
+}

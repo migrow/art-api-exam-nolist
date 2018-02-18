@@ -7,7 +7,11 @@ const {
   createPainting,
   getPainting,
   deletePainting,
-  updatePainting
+  updatePainting,
+  createArtist,
+  getArtist,
+  deleteArtist,
+  updateArtist
 } = require('./dal')
 
 const { propOr, join, not, isEmpty } = require('ramda')
@@ -28,9 +32,21 @@ app.post('/paintings', function(req, res, next) {
     .catch(err => next(new HTTPError(err.status, err.message, err)))
 })
 
+app.post('/artists', function(req, res, next) {
+  createArtist(req.body)
+    .then(artist => res.send(artist))
+    .catch(err => next(new HTTPError(err.status, err.message, err)))
+})
+
 app.get('/paintings/:id', function(req, res, next) {
   getPainting(req.params.id)
     .then(painting => res.send(painting))
+    .catch(err => next(new HTTPError(err.status, err.message, err)))
+})
+
+app.get('/artists/:id', function(req, res, next) {
+  getArtist(req.params.id)
+    .then(artist => res.send(artist))
     .catch(err => next(new HTTPError(err.status, err.message, err)))
 })
 
@@ -44,9 +60,25 @@ app.delete('/paintings/:id', function(req, res, next) {
   })
 })
 
+app.delete('/artists/:id', function(req, res, next) {
+  deleteArtist(req.params.id, function(err, deletedResult) {
+    if (err) {
+      next(new HTTPError(err.status, err.message, err))
+      return
+    }
+    res.send(deletedResult)
+  })
+})
+
 app.put('/paintings/:id', function(req, res, next) {
   updatePainting(req.body)
     .then(painting => res.send(painting))
+    .catch(err => next(new HTTPError(err.status, err.message, err)))
+})
+
+app.put('/artists/:id', function(req, res, next) {
+  updateArtist(req.body)
+    .then(artist => res.send(artist))
     .catch(err => next(new HTTPError(err.status, err.message, err)))
 })
 
