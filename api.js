@@ -15,7 +15,7 @@ const docFilter = require('./lib/doc-filter')
 const reqFieldChecker = require('./lib/check-req-fields')
 const objCleaner = require('./lib/clean-body')
 
-const { propOr, join, not, isEmpty } = require('ramda')
+const { propOr, join, not, isEmpty, pathOr } = require('ramda')
 
 const port = propOr(4000, 'PORT', process.env.PORT)
 
@@ -59,11 +59,20 @@ app.get('/', function(req, res, next) {
 })
 
 app.get('/paintings', function(req, res, next) {
-  const options = {
-    include_docs: true,
-    startkey: 'painting_',
-    endkey: 'painting_\ufff0',
-    limit: 5
+  if (pathOr(null, ['query', 'limit'], req)) {
+    var options = {
+      include_docs: true,
+      startkey: 'painting_',
+      endkey: 'painting_\ufff0',
+      limit: req.query.limit
+    }
+  } else {
+    var options = {
+      include_docs: true,
+      startkey: 'painting_',
+      endkey: 'painting_\ufff0',
+      limit: 5
+    }
   }
   getDocs(options)
     .then(docFilter(req, res))
@@ -71,11 +80,20 @@ app.get('/paintings', function(req, res, next) {
 })
 
 app.get('/artists', function(req, res, next) {
-  const options = {
-    include_docs: true,
-    startkey: 'artist_',
-    endkey: 'artist_\ufff0',
-    limit: 5
+  if (pathOr(null, ['query', 'limit'], req)) {
+    var options = {
+      include_docs: true,
+      startkey: 'artist_',
+      endkey: 'artist_\ufff0',
+      limit: req.query.limit
+    }
+  } else {
+    var options = {
+      include_docs: true,
+      startkey: 'artist_',
+      endkey: 'artist_\ufff0',
+      limit: 5
+    }
   }
   getDocs(options)
     .then(docFilter(req, res))
@@ -92,10 +110,11 @@ app.post('/paintings', function(req, res, next) {
         `Missing Fields: ${join(' ', paintingReqFieldChkr(req.body))}`
       )
     )
+  } else {
+    createPainting(req.body)
+      .then(painting => res.send(painting))
+      .catch(err => next(new HTTPError(err.status, err.message, err)))
   }
-  createPainting(req.body)
-    .then(painting => res.send(painting))
-    .catch(err => next(new HTTPError(err.status, err.message, err)))
 })
 
 app.post('/artists', function(req, res, next) {
@@ -108,10 +127,11 @@ app.post('/artists', function(req, res, next) {
         `Missing Fields: ${join(' ', artistReqFieldChkr(req.body))}`
       )
     )
+  } else {
+    createArtist(req.body)
+      .then(artist => res.send(artist))
+      .catch(err => next(new HTTPError(err.status, err.message, err)))
   }
-  createArtist(req.body)
-    .then(artist => res.send(artist))
-    .catch(err => next(new HTTPError(err.status, err.message, err)))
 })
 
 app.get('/paintings/:id', function(req, res, next) {
@@ -162,10 +182,11 @@ app.put('/paintings/:id', function(req, res, next) {
       )
     )
     return
+  } else {
+    updateDoc(cleanedBody)
+      .then(painting => res.send(painting))
+      .catch(err => next(new HTTPError(err.status, err.message, err)))
   }
-  updateDoc(cleanedBody)
-    .then(painting => res.send(painting))
-    .catch(err => next(new HTTPError(err.status, err.message, err)))
 })
 
 app.put('/artists/:id', function(req, res, next) {
@@ -192,10 +213,11 @@ app.put('/artists/:id', function(req, res, next) {
       )
     )
     return
+  } else {
+    updateDoc(req.body)
+      .then(artist => res.send(artist))
+      .catch(err => next(new HTTPError(err.status, err.message, err)))
   }
-  updateDoc(req.body)
-    .then(artist => res.send(artist))
-    .catch(err => next(new HTTPError(err.status, err.message, err)))
 })
 
 app.use(function(err, req, res, next) {
