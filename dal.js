@@ -28,17 +28,13 @@ const deleteDoc = id =>
 
 const updateDoc = doc => db.put(doc)
 
-const getPaintings = options =>
-  db.allDocs(options).then(result => pluck('doc', result.rows))
-
-const getArtists = options =>
+const getDocs = options =>
   db.allDocs(options).then(result => pluck('doc', result.rows))
 
 module.exports = {
   createPainting,
   createArtist,
-  getPaintings,
-  getArtists,
+  getDocs,
   deleteDoc,
   getDoc,
   updateDoc
