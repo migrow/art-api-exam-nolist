@@ -66,7 +66,8 @@ app.get('/paintings', function(req, res, next) {
   const options = {
     include_docs: true,
     startkey: 'painting_',
-    endkey: 'painting_\ufff0'
+    endkey: 'painting_\ufff0',
+    limit: 5
   }
   getPaintings(options)
     .then(docFilter(req, res))
@@ -77,7 +78,8 @@ app.get('/artists', function(req, res, next) {
   const options = {
     include_docs: true,
     startkey: 'artist_',
-    endkey: 'artist_\ufff0'
+    endkey: 'artist_\ufff0',
+    limit: 5
   }
   getArtists(options)
     .then(docFilter(req, res))
@@ -129,23 +131,15 @@ app.get('/artists/:id', function(req, res, next) {
 })
 
 app.delete('/paintings/:id', function(req, res, next) {
-  deletePainting(req.params.id, function(err, deletedResult) {
-    if (err) {
-      next(new HTTPError(err.status, err.message, err))
-      return
-    }
-    res.send(deletedResult)
-  })
+  deletePainting(req.params.id)
+    .then(deletedResult => res.send(deletedResult))
+    .catch(err => next(new HTTPError(err.status, err.message, err)))
 })
 
 app.delete('/artists/:id', function(req, res, next) {
-  deleteArtist(req.params.id, function(err, deletedResult) {
-    if (err) {
-      next(new HTTPError(err.status, err.message, err))
-      return
-    }
-    res.send(deletedResult)
-  })
+  deleteArtist(req.params.id)
+    .then(deletedResult => res.send(deletedResult))
+    .catch(err => next(new HTTPError(err.status, err.message, err)))
 })
 
 app.put('/paintings/:id', function(req, res, next) {
