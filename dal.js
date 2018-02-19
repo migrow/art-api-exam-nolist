@@ -3,7 +3,7 @@ const PouchDB = require('pouchdb-core')
 PouchDB.plugin(require('pouchdb-adapter-http'))
 const db = new PouchDB(process.env.COUCHDB_URL)
 const slugster = require('slugify')
-const { reject, split, slice, join } = require('ramda')
+const { reject, split, slice, join, pluck } = require('ramda')
 
 const createPainting = doc => {
   doc.type = 'painting'
@@ -68,6 +68,9 @@ const deletePainting = function(id, cb) {
 const updatePainting = doc => db.put(doc)
 const updateArtist = doc => db.put(doc)
 
+const getPaintings = options =>
+  db.allDocs(options).then(result => pluck('doc', result.rows))
+
 module.exports = {
   createPainting,
   getPainting,
@@ -76,5 +79,6 @@ module.exports = {
   createArtist,
   getArtist,
   deleteArtist,
-  updateArtist
+  updateArtist,
+  getPaintings
 }
