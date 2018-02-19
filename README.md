@@ -17,32 +17,40 @@ In order to make reference within the API to the database you created, you will 
 
 `COUCHDB_URL=https://<database key>:<database secret>@<rest of database url>`
 
-To clarify, `https://` will come from the database URL you copied. Then you will paste in your database key as shown, followed by `:` and the paste in your database secret, followed by `@`.
+To clarify, `https://` will come from the database URL you copied. Then you will paste in your database key as shown, followed by `:` and the paste in your database secret, followed by `@`. You will also want to establish a port for this API to run from in you `.env` file. The default port set in the `api.js` file is 4000, meaning if the port you set is not found, 4000 will be used in its stead. The command will look like this:
 
-Be sure to the create a file named `.gitignore` and within that file add the text `.env`. This will prevent your database key and secret from being included in your repository should it ever be made public, as it would after being uploaded to GitHub.
+`PORT=<port number>`
+
+You should already have a `.gitignore` file, and within that file should appear the text `.env`. This will prevent your database key and secret from being included in your repository should it ever be made public, as it would after being uploaded to GitHub.
 
 ## Loading the Database
-In order to load the data from this repository into your database, run the command `npm run load` within your browser. A successful `load` command will show an array of objects in your terminal, each containing information either on a painting or an artist. To verify the load was successful, you can open the database (in this example named art-api) and check that the documents are there.
+In order to load the data from this repository into your database, run the command `npm run load` within your terminal. A successful `load` command will show an array of objects in your terminal, each containing `ok`, `id`, and `rev` properties.
+```
+  { ok: true,
+    id: 'artist_pierre-auguste-renoires',
+    rev: '1-9cdca9f890984d988be567a18cdd613f' }
+```
+To verify the load was successful, you can open the database (in this example named art-api) and check that the documents are there.
 
 ## Starting the api
-To run the API, simply type the command `npm start` in your terminal. A message reading `ART API IS UP on port 4000` should appear. The API is now operational. Verify this by typing `http://localhost:4000/` in your browser. The message "Welcome to the Art API" will appear.
+To run the API, simply type the command `npm start` in your terminal. A message reading `ART API IS UP on port <port number>` should appear. The API is now operational. Verify this by typing `http://localhost:<port number>/` in your browser. The message "Welcome to the Art API" will appear.
 
 ## Basics
 
 The Art API is a RESTful API utilizing JSON with information on certain paintings and the artists who painted them.
 
 ## Base URL
-All endpoints within the Art API are located at the following base URL: `http://localhost:4000/`
+All endpoints within the Art API are located at the following base URL: `http://localhost:<port number>/`
 
 Within this address, you'll find a two separate APIs: one for paintings, `/paintings`, and another for artists, `/artists`. Within both API, you'll find a collection of endpoints that allow you to retrieve, update, delete, or create an artist or painting.
 
 ## Scheme
-The Art API operates over HTTP.
+The Art API operates exclusively over HTTP.
 
 ## HTTP Verbs
 The Art API uses the following HTTP commands:
-- `GET`: used to retrieve a specific painting or artist from the endpoint `/paintings/:id` or `/artists/:id`
-- `POST`: used to create one painting or artist at the endpoint `/paintings` or `/artists`
+- `GET`: used to retrieve a specific painting or artist from the endpoint `/paintings/:id` or `/artists/:id`. It can also be used to retrive a list of artists or paintings at the endpoint `/artists` or `/paintings`.
+- `POST`: used to create a painting or artist at the endpoint `/paintings` or `/artists`
 - `PUT`: used to update a painting or artist at the endpoint `/paintings/:id` or `/artists/:id`
 - `DELETE`: used to delete a painting or artist at the endpoint `/paintings/:id` or `/artists/:id`
 
