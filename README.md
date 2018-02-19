@@ -31,31 +31,53 @@ To run the API, simply type the command `npm start` in your terminal. A message 
 
 The Art API is a RESTful API utilizing JSON with information on certain paintings and the artists who painted them.
 
-### Base URL
+## Base URL
 All endpoints within the Art API are located at the following base URL: `http://localhost:4000/`
 
 Within this address, you'll find a two separate APIs: one for paintings, `/paintings`, and another for artists, `/artists`. Within both API, you'll find a collection of endpoints that allow you to retrieve, update, delete, or create an artist or painting.
 
-### Scheme
+## Scheme
 The Art API operates over HTTP.
 
-### HTTP Verbs
+## HTTP Verbs
 The Art API uses the following HTTP commands:
 - `GET`: used to retrieve a specific painting or artist from the endpoint `/paintings/:id` or `/artists/:id`
 - `POST`: used to create one painting or artist at the endpoint `/paintings` or `/artists`
 - `PUT`: used to update a painting or artist at the endpoint `/paintings/:id` or `/artists/:id`
 - `DELETE`: used to delete a painting or artist at the endpoint `/paintings/:id` or `/artists/:id`
 
-### Content Types
-All endpoints within the Art API accept and return JSON-formatted data, exclusively.
+## Paintings
 
-### Status Codes
-Below are a list of status codes you may encounter when operating the Art API, as well as potential reasons those status codes have been encountered.
-
-`200 OK` - Encountered when a `GET` request is successful. The response body should return whatever resource you were attempting to find. For simplicity, successful `POST` and `PUT` requests will return the same response code, as well as a response body that contains an object with properties `ok`, `id`, and `rev`.
-
-A successful `GET` of a painting will look something like this:
-`{
+## Create a Painting
+Create a painting via `POST` to the `/paintings` endpoint, passing in a JSON object in the request body. The `name`, `artist`, `movement`, `museum` and `yearCreated` properties are required.
+```
+POST /paintings
+{
+    "name": "The Persistence of Memory",
+    "movement": "surrealism",
+    "artist": "Salvador Dali",
+    "yearCreated": 1931,
+    "museum": {
+        "name": "Musuem of Modern Art",
+        "location": "New York"
+    }
+```
+When successfully created, the response body will include the `ok`, `rev`, and `id` properties.
+```
+{
+    "ok": true,
+    "id": "painting_persistence-of-memory",
+    "rev": "1-3c6907dec0b842f8a1ce6623aef13ac4"
+}
+```
+## Get a Painting
+Get a painting via `GET` from the `/paintings/:id` route, passing in the ID.
+```
+GET /paintings/persistence-of-memory
+```
+When this is called, a successfully found painting will result in the painting returned in the response body, which will include the `_id` and `_rev` properties.
+```
+{
     "name": "The Persistence of Memory",
     "movement": "surrealism",
     "artist": "Salvador Dali",
@@ -64,17 +86,135 @@ A successful `GET` of a painting will look something like this:
         "name": "Musuem of Modern Art",
         "location": "New York"
     },
+    "_id": "painting_the-persistence-of-memory",
+    "_rev": "35-beb769f4ab2c4d48bba9694998dd320e"
+}
+```
+
+## Delete a Painting
+Delete a painting from the collection of paintings via `DELETE` to the `/paintings/:id` path.
+```
+DELETE /paintings/painting_persistence-of-memory
+```
+This will result in a response body which includes the properties `ok`, `id`, and `rev`.
+```
+{
+    "ok": true,
+    "id": "painting_the-persistence-of-memory",
+    "rev": "36-232ff78dcd2f49c5bb438f52e2e2f291"
+}
+```
+
+## Update a Painting
+Update a painting with a `PUT` call to the `/paintings/:id` path. Provide a representation of the painting in the request body. Be sure to include the most recent `_rev` property or you'll receive a `409 Conflict` error. All fields will be required, including `_id`, `_rev`, `name`, `movement`, `artist`, `yearCreated`, and `museum`.
+```
+{
+    "name": "The Persistence of Memory",
+    "movement": "surrealism",
+    "artist": "Salvador Perez",
+    "yearCreated": 1931,
+    "museum": {
+        "name": "Museum of Modern Art",
+        "location": "New York"
+    },
     "type": "painting",
     "_id": "painting_persistence-of-memory",
-    "_rev": "28-3c6907dec0b842f8a1ce6623aef13ac4"
-}`
-
-A successful `POST` or `PUT` will look something like this:
-`{
+    "_rev": "34-1dff64771e8e40988349f8a61674386c"
+}
+```
+A successfully updated painting will result in a response body with `ok`, `id`, and `rev` properties.
+```
+{
     "ok": true,
-    "id": "painting_-persistence-of-memory",
-    "rev": "28-3c6907dec0b842f8a1ce6623aef13ac4"
-}`
+    "id": "painting_persistence-of-memory",
+    "rev": "35-232ff78dcd2f49c5bb438f52e2e2f291"
+}
+```
+
+## Artists
+
+## Create an Artist
+Create an artist via `POST` to the `/artists` endpoint, passing in a JSON object in the request body. The `name`, `country`, `birthYear`, and `deathYear` properties are required.
+
+```
+POST /artists
+{
+    "name": "Salvador Dali",
+    "country": "Spain",
+    "birthYear": 1904,
+    "deathYear": 1931
+}
+```
+When successfully created, the response body will include the `ok`, `rev`, and `id` properties.
+```
+{
+    "ok": true,
+    "id": "artist_salvador-dali",
+    "rev": "1-54b428a8ad014546a58566b76bcaa544"
+}
+```
+
+## Get an Artist
+Get an artist via `GET` from the `/artists/:id` route, passing in the ID.
+```
+GET /artists/artist_salvador-dali
+```
+When this is called, a successfully found artist will result in the artist returned in the response body, which will include the `_id` and `_rev` properties.
+```
+{
+    "name": "Salvador Dali",
+    "country": "Spain",
+    "birthYear": 1904,
+    "deathYear": 1931,
+    "type": "artist",
+    "_id": "artist_salvador-dali",
+    "_rev": "3-54b428a8ad014546a58566b76bcaa544"
+}
+```
+
+## Delete an Artist
+Delete an artist from the collection of artists via `DELETE` to the `/artists/:id` path.
+```
+DELETE /artists/artist_salvador_dali
+```
+This will result in a response body which includes the properties `ok`, `id`, and `rev`.
+```
+{
+    "ok": true,
+    "id": "artist_salvador-dali",
+    "rev": "4-874a9f326b604b919aa3c73176ed9b79"
+}
+```
+
+## Update an Artist
+Update an artist with a `PUT` call to the `/artists/:id` path. Provide a representation of the artist in the request body. Be sure to include the most recent `_rev` property or you'll receive a `409 Conflict` error. All fields will be required, including `_id`, `_rev`, `name`, `country`, `birthYear`, and `deathYear`.
+```
+{
+    "name": "Salvador Dali",
+    "country": "Espana",
+    "birthYear": 1904,
+    "deathYear": 1931,
+    "type": "artist",
+    "_id": "artist_salvador-dali",
+    "_rev": "3-54b428a8ad014546a58566b76bcaa544"
+}
+```
+A successfully updated artist will result in a response body with `ok`, `id`, and `rev` properties.
+```
+{
+    "ok": true,
+    "id": "artist_salvador-dali",
+    "rev": "5-874a9f326b604b919aa3c73176ed9b79"
+}
+```
+
+## Content Types
+All endpoints within the Art API accept and return JSON-formatted data, exclusively.
+
+## Status Codes
+Below are a list of status codes you may encounter when operating the Art API, as well as potential reasons those status codes have been encountered.
+
+`200 OK` - Encountered when a `GET` request is successful. The response body should return whatever resource you were attempting to find. For simplicity, successful `POST` and `PUT` requests will return the same response code, as well as a response body that contains an object with properties `ok`, `id`, and `rev`.
 
 `400 Bad Request` - Encountered when a request is made that is incorrectly formatted, such as missing a required property in an update or create request.
 
