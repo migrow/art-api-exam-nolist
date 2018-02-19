@@ -6,8 +6,7 @@ const bodyParser = require('body-parser')
 const {
   createPainting,
   createArtist,
-  getPaintings,
-  getArtists,
+  getDocs,
   getDoc,
   deleteDoc,
   updateDoc
@@ -66,7 +65,7 @@ app.get('/paintings', function(req, res, next) {
     endkey: 'painting_\ufff0',
     limit: 5
   }
-  getPaintings(options)
+  getDocs(options)
     .then(docFilter(req, res))
     .catch(err => next(new HTTPError(err.status, err.message, err)))
 })
@@ -78,7 +77,7 @@ app.get('/artists', function(req, res, next) {
     endkey: 'artist_\ufff0',
     limit: 5
   }
-  getArtists(options)
+  getDocs(options)
     .then(docFilter(req, res))
     .catch(err => next(new HTTPError(err.status, err.message, err)))
 })
