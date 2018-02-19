@@ -33,37 +33,17 @@ const getPainting = id => db.get(id)
 
 const getArtist = id => db.get(id)
 
-const deleteArtist = function(id, cb) {
-  db.get(id, function(err, doc) {
-    if (err) {
-      cb(err)
-      return
-    }
-    db.remove(doc, function(err, deletedResult) {
-      if (err) {
-        cb(err)
-        return
-      }
-      cb(null, deletedResult)
-    })
-  })
-}
+const deleteArtist = id =>
+  db
+    .get(id)
+    .then(id => db.remove(id))
+    .catch(err => console.log(err))
 
-const deletePainting = function(id, cb) {
-  db.get(id, function(err, doc) {
-    if (err) {
-      cb(err)
-      return
-    }
-    db.remove(doc, function(err, deletedResult) {
-      if (err) {
-        cb(err)
-        return
-      }
-      cb(null, deletedResult)
-    })
-  })
-}
+const deletePainting = id =>
+  db
+    .get(id)
+    .then(id => db.remove(id))
+    .catch(err => console.log(err))
 
 const updatePainting = doc => db.put(doc)
 const updateArtist = doc => db.put(doc)
