@@ -29,7 +29,6 @@ const paintingReqFieldChkr = reqFieldChecker([
 ])
 const artistReqFieldChkr = reqFieldChecker([
   'name',
-  'style',
   'country',
   'birthYear',
   'deathYear'
@@ -49,7 +48,6 @@ const putArtistReqFields = reqFieldChecker([
   '_id',
   '_rev',
   'name',
-  'style',
   'country',
   'birthYear',
   'deathYear'
