@@ -11,8 +11,10 @@ const {
   createArtist,
   getArtist,
   deleteArtist,
-  updateArtist
+  updateArtist,
+  getPaintings
 } = require('./dal')
+const docFilter = require('./lib/doc-filter')
 const reqFieldChecker = require('./lib/check-req-fields')
 const objCleaner = require('./lib/clean-body')
 
@@ -57,6 +59,17 @@ app.use(bodyParser.json())
 
 app.get('/', function(req, res, next) {
   res.send(`<h1> Welcome to the Art API.</h1>`)
+})
+
+app.get('/paintings', function(req, res, next) {
+  const options = {
+    include_docs: true,
+    startkey: 'painting_',
+    endkey: 'painting_\ufff0'
+  }
+  getPaintings(options)
+    .then(docFilter(req, res))
+    .catch(err => next(new HTTPError(err.status, err.message, err)))
 })
 
 app.post('/paintings', function(req, res, next) {
