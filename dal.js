@@ -3,8 +3,18 @@ const PouchDB = require('pouchdb-core')
 PouchDB.plugin(require('pouchdb-adapter-http'))
 const db = new PouchDB(process.env.COUCHDB_URL)
 const slugster = require('slugify')
+const { reject, split, slice, startsWith } = require('ramda')
 
 const createPainting = doc => {
+  // const docNameArray = split(' ', doc.name)
+  // console.log(docNameArray, slice(1, Infinity, docNameArray))
+  // if (docNameArray[0] === 'The' || docNameArray[0] === 'A') {
+  //   doc._id = `painting_${slugster(slice(1, Infinity, split(' ', doc.name)), {
+  //     lower: true
+  //   })}`
+  // } else {
+  //   doc._id = `painting_${slugster(doc.name, { lower: true })}`
+  // }
   doc._id = `painting_${slugster(doc.name, { lower: true })}`
   doc.type = 'painting'
   return db.put(doc)

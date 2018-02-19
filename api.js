@@ -21,9 +21,7 @@ const port = propOr(4000, 'PORT', process.env.PORT)
 app.use(bodyParser.json())
 
 app.get('/', function(req, res, next) {
-  res.send(
-    `<h1> Welcome to the Art API. Manage all the paintings for much win.</h1>`
-  )
+  res.send(`<h1> Welcome to the Art API.</h1>`)
 })
 
 app.post('/paintings', function(req, res, next) {
@@ -87,4 +85,4 @@ app.use(function(err, req, res, next) {
   res.send(err.message)
 })
 
-app.listen(port, () => console.log('PAINTINGS API IS UP on port', port))
+app.listen(port, () => console.log('ART API IS UP on port', port))
