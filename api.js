@@ -5,15 +5,12 @@ const HTTPError = require('node-http-error')
 const bodyParser = require('body-parser')
 const {
   createPainting,
-  getPainting,
-  deletePainting,
-  updatePainting,
   createArtist,
-  getArtist,
-  deleteArtist,
-  updateArtist,
   getPaintings,
-  getArtists
+  getArtists,
+  getDoc,
+  deleteDoc,
+  updateDoc
 } = require('./dal')
 const docFilter = require('./lib/doc-filter')
 const reqFieldChecker = require('./lib/check-req-fields')
@@ -119,25 +116,25 @@ app.post('/artists', function(req, res, next) {
 })
 
 app.get('/paintings/:id', function(req, res, next) {
-  getPainting(req.params.id)
+  getDoc(req.params.id)
     .then(painting => res.send(painting))
     .catch(err => next(new HTTPError(err.status, err.message, err)))
 })
 
 app.get('/artists/:id', function(req, res, next) {
-  getArtist(req.params.id)
+  getDoc(req.params.id)
     .then(artist => res.send(artist))
     .catch(err => next(new HTTPError(err.status, err.message, err)))
 })
 
 app.delete('/paintings/:id', function(req, res, next) {
-  deletePainting(req.params.id)
+  deleteDoc(req.params.id)
     .then(deletedResult => res.send(deletedResult))
     .catch(err => next(new HTTPError(err.status, err.message, err)))
 })
 
 app.delete('/artists/:id', function(req, res, next) {
-  deleteArtist(req.params.id)
+  deleteDoc(req.params.id)
     .then(deletedResult => res.send(deletedResult))
     .catch(err => next(new HTTPError(err.status, err.message, err)))
 })
@@ -167,7 +164,7 @@ app.put('/paintings/:id', function(req, res, next) {
     )
     return
   }
-  updatePainting(cleanedBody)
+  updateDoc(cleanedBody)
     .then(painting => res.send(painting))
     .catch(err => next(new HTTPError(err.status, err.message, err)))
 })
@@ -197,7 +194,7 @@ app.put('/artists/:id', function(req, res, next) {
     )
     return
   }
-  updateArtist(req.body)
+  updateDoc(req.body)
     .then(artist => res.send(artist))
     .catch(err => next(new HTTPError(err.status, err.message, err)))
 })
