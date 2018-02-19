@@ -63,14 +63,6 @@ const paintings = db
       museum: { name: 'Musée d’Orsay', location: 'Paris' }
     },
     {
-      _id: 'artist_salvador-dali',
-      type: 'artist',
-      name: 'Salvador Dali',
-      country: 'Spain',
-      birthYear: 1904,
-      deathYear: 1989
-    },
-    {
       _id: 'artist_vincent-van-gogh',
       type: 'artist',
       name: 'Vincent van Gogh',
