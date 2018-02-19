@@ -61,6 +61,62 @@ const paintings = db
       artist: 'Pierre-Auguste Renoires',
       yearCreated: 1876,
       museum: { name: 'Musée d’Orsay', location: 'Paris' }
+    },
+    {
+      _id: 'artist_salvador-dali',
+      type: 'artist',
+      name: 'Salvador Dali',
+      country: 'Spain',
+      birthYear: 1904,
+      deathYear: 1989
+    },
+    {
+      _id: 'artist_vincent-van-gogh',
+      type: 'artist',
+      name: 'Vincent van Gogh',
+      country: 'Amsterdam',
+      birthYear: 1853,
+      deathYear: 1890
+    },
+    {
+      _id: 'artist_claude-monet',
+      type: 'artist',
+      name: 'Claude Monet',
+      country: 'France',
+      birthYear: 1840,
+      deathYear: 1926
+    },
+    {
+      _id: 'artist_leonardo-da-vinci',
+      type: 'artist',
+      name: 'Leonardo da Vinci',
+      country: 'Italy',
+      birthYear: 1452,
+      deathYear: 1519
+    },
+    {
+      _id: 'artist_georges-seurat',
+      type: 'artist',
+      name: 'Georges Seurat',
+      country: 'France',
+      birthYear: 1859,
+      deathYear: 1891
+    },
+    {
+      _id: 'artist_pablo-picasso',
+      type: 'artist',
+      name: 'Pablo Picasso',
+      country: 'Spain',
+      birthYear: 1881,
+      deathYear: 1973
+    },
+    {
+      _id: 'artist_pierre-auguste-renoires',
+      type: 'artist',
+      name: 'Pierre-Auguste Renoires',
+      country: 'France',
+      birthYear: 1841,
+      deathYear: 1919
     }
   ])
   .then(res => console.log(res))
