@@ -71,6 +71,9 @@ const updateArtist = doc => db.put(doc)
 const getPaintings = options =>
   db.allDocs(options).then(result => pluck('doc', result.rows))
 
+const getArtists = options =>
+  db.allDocs(options).then(result => pluck('doc', result.rows))
+
 module.exports = {
   createPainting,
   getPainting,
@@ -80,5 +83,6 @@ module.exports = {
   getArtist,
   deleteArtist,
   updateArtist,
-  getPaintings
+  getPaintings,
+  getArtists
 }

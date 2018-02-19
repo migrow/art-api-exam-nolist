@@ -12,7 +12,8 @@ const {
   getArtist,
   deleteArtist,
   updateArtist,
-  getPaintings
+  getPaintings,
+  getArtists
 } = require('./dal')
 const docFilter = require('./lib/doc-filter')
 const reqFieldChecker = require('./lib/check-req-fields')
@@ -68,6 +69,17 @@ app.get('/paintings', function(req, res, next) {
     endkey: 'painting_\ufff0'
   }
   getPaintings(options)
+    .then(docFilter(req, res))
+    .catch(err => next(new HTTPError(err.status, err.message, err)))
+})
+
+app.get('/artists', function(req, res, next) {
+  const options = {
+    include_docs: true,
+    startkey: 'artist_',
+    endkey: 'artist_\ufff0'
+  }
+  getArtists(options)
     .then(docFilter(req, res))
     .catch(err => next(new HTTPError(err.status, err.message, err)))
 })
