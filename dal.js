@@ -18,24 +18,15 @@ const createArtist = doc => {
   return db.put(doc)
 }
 
-const getPainting = id => db.get(id)
+const getDoc = id => db.get(id)
 
-const getArtist = id => db.get(id)
-
-const deleteArtist = id =>
+const deleteDoc = id =>
   db
     .get(id)
     .then(id => db.remove(id))
     .catch(err => console.log(err))
 
-const deletePainting = id =>
-  db
-    .get(id)
-    .then(id => db.remove(id))
-    .catch(err => console.log(err))
-
-const updatePainting = doc => db.put(doc)
-const updateArtist = doc => db.put(doc)
+const updateDoc = doc => db.put(doc)
 
 const getPaintings = options =>
   db.allDocs(options).then(result => pluck('doc', result.rows))
@@ -45,13 +36,10 @@ const getArtists = options =>
 
 module.exports = {
   createPainting,
-  getPainting,
-  deletePainting,
-  updatePainting,
   createArtist,
-  getArtist,
-  deleteArtist,
-  updateArtist,
   getPaintings,
-  getArtists
+  getArtists,
+  deleteDoc,
+  getDoc,
+  updateDoc
 }
